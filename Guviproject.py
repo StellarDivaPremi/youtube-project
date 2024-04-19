@@ -6,7 +6,7 @@ import googleapiclient.errors
 import sys
 from PIL import Image
 import pandas as pd
-import matplotlib.pyplot as plt
+
 
 # ********************************************************HEADER CREATION************************************************************************
 # Fetch image from URL
@@ -306,7 +306,7 @@ def insert_playlist_data(data):
         print("Data inserted successfully")
     except mysql.connector.Error as e:
         print(f"Error inserting data: {e}")
-        conn.rollback()  # Rollback in case of error
+        # conn.rollback()  # Rollback in case of error
 
 # Function to insert comment data into MySQL table
 
@@ -329,7 +329,7 @@ def insert_comment_data(data):
         print("Data inserted successfully")
     except mysql.connector.Error as e:
         print(f"Error inserting data: {e}")
-        conn.rollback()  # Rollback in case of error
+        # conn.rollback()  # Rollback in case of error
 
 # Function to insert video data into MySQL table
 
@@ -359,8 +359,8 @@ def insert_video_data(data):
         print("Data inserted successfully")
     except mysql.connector.Error as e:
         print(f"Error inserting data: {e}")
-        conn.rollback()  # Rollback in case of error
-        conn.close
+        # conn.rollback()  # Rollback in case of error
+        # conn.close
 
 
 # **************************************************************************************************************
@@ -368,7 +368,7 @@ def insert_video_data(data):
 # # Committing the changes and closing the connection
 
     conn.commit()
-    conn.close()
+    # conn.close()
 
 # ***************************************************************************************************************
 # Streamlit UI
@@ -428,9 +428,11 @@ def main():
                         channel_data = fetch_channel_details(ch_id)
                         if channel_data:
                             insert_channel_data(channel_data)
-                            st.success('Channel data inserted successfully into CHANNEL table.')
+                            st.success('Channel data inserted successfully into CHANNEL MySQL table.')    
+
                         else:
                             st.error("No channel found with the provided ID.")
+                      # st.success('Channel data inserted successfully into CHANNEL MySQL table.')    
 
 # Fetch and inserting data to playlist table
 
@@ -438,9 +440,9 @@ def main():
                         for playlist_data in playlists_data:
                             if playlist_data:
                                 insert_playlist_data(playlist_data)
-                                st.success('Playlist data inserted successfully into the "PLAYLIST" MySQL table.')
                             else:
                                 st.error("No Playlist found with the provided ID.")
+                        st.success('Playlist data inserted successfully into the "PLAYLIST" MySQL table.')
 
 # Fetch and insert video data
 
@@ -448,10 +450,9 @@ def main():
                         for video_data in videos_data:
                             if video_data:
                                 insert_video_data(video_data)
-                                st.success("Data inserted successfully into  Video MySQL tables.")
                             else:
                                 st.error("No videos found for the channel.")
-
+                        st.success("Video data inserted successfully into  VIDEO  MySQL tables.")
                
 # Fetch and insert comment data
 
@@ -459,9 +460,9 @@ def main():
                         for comment_data in comments_data:
                             if comment_data:
                                 insert_comment_data(comment_data)
-                                st.success('comment data inserted successfully into the "PLAYLIST" MySQL table.')
                             else:
                                 st.error("No comments found with the provided ID.")
+                        st.success('Comment data inserted successfully into the COMMENT MySQL table.')        
  
 
 
@@ -471,45 +472,37 @@ def main():
                                          
                                       
 # Establish MySQL connection
-
         conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="Jesus@2525",
-            database="youtube"
-            )
+        host="localhost",
+        user="root",
+        password="Jesus@2525",
+        database="youtube"  
+         )
 
 # Creating a cursor object
-
         cursor = conn.cursor()
 
 # Define Streamlit layout
-
-        col1, col2, col3 = st.columns([4, 6, 6])
+        col1, col2 = st.columns([4, 10])
 
 # Column 1: Input SQL Query
-
         with col1:
             st.text("ENTER YOUR SQL QUERY:")
-            query_input = st.text_area("SQL Query", height =100)
-
-# Column 2: Display SQL Query
-
-        with col2:
-            if st.button("Copy to execute"):
-                st.text_area("Paste SQL query here", value=query_input, height=100)
+            query_input = st.text_area("SQL Query", height=200)
 
 # Column 3: Execute and Display Results
-
-        with col3:
+        with col2:
             if st.button("Execute"):
-                st.text("Query Results:")
+                st.text("Display Query Results:")
                 cursor.execute(query_input)
                 query_results = cursor.fetchall()  # Fetch all the results
                 if query_results:
-                    st.write(query_results)
+            # Convert query_results to DataFrame
+                    df = pd.DataFrame(query_results, columns=[i[0] for i in cursor.description])
+                    st.write(df)
             else:
-                st.write("No results found.")
+                st.write("No results found.")    
+    
         st.write('''
                         1.What are the names of all the videos and their corresponding channel 
             
