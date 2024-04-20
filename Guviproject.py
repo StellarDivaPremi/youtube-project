@@ -482,7 +482,7 @@ def main():
 # Creating a cursor object
         cursor = conn.cursor()
 
-# Define Streamlit layout
+# Define Streamlit columns
         col1, col2 = st.columns([4, 10])
 
 # Column 1: Input SQL Query
