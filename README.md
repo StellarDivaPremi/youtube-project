@@ -41,15 +41,16 @@ Choose an option from the sidebar menu:
 4,Query the MySQL Tables
 5.Exit
 
+**Follow the instructions for each option to perform the desired action.**
+
+Use SQL queries to analyze stored data and gain insights into YouTube channels, videos, and comments.
+
 ## Project Video Demo
 
 Check out the video demo of my project:
 
 **https://www.youtube.com/watch?v=zJG540rAcA8**
 
-**Follow the instructions for each option to perform the desired action.**
-
-Use SQL queries to analyze stored data and gain insights into YouTube channels, videos, and comments.
 Contributors
 [Premila Mohanasundaram]
 
