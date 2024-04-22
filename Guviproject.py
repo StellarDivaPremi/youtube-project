@@ -656,12 +656,12 @@ JOIN
 GROUP BY 
     c.channel_name;
 
-EXPLAINATION: 
-We're using LOCATE function to check if 'H' (hours) or 'M' (minutes) are present in the duration string.
-Based on their presence, we extract the corresponding hour, minute, and second parts and convert them into seconds.
-The CASE statement handles different scenarios depending on whether hours, minutes, or only seconds are present in the duration string.
-Finally, the average duration in seconds is calculated for each channel.
-This query should give you the average duration of videos in seconds for each channel, considering the provided datatype  format fo and datafetched for duration is varchar(255). 
+                        EXPLAINATION: 
+                        We're using LOCATE function to check if 'H' (hours) or 'M' (minutes) are present in the duration string.
+                        Based on their presence, we extract the corresponding hour, minute, and second parts and convert them into seconds.
+                        The CASE statement handles different scenarios depending on whether hours, minutes, or only seconds are present in the duration string.
+                        Finally, the average duration in seconds is calculated for each channel.
+                        This query should give you the average duration of videos in seconds for each channel, considering the provided datatype  format fo and datafetched for duration is varchar(255). 
 
 
                         10.Which videos have the highest number of comments and what are their
