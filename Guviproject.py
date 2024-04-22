@@ -632,16 +632,36 @@ def main():
 
                         Ans :
 
-                        SELECT c.channel_name, AVG(TIME_TO_SEC(v.duration)) AS avg_duration_seconds
-                        FROM channel c
-                        JOIN video v ON c.channel_id = v.channel_id
-                        GROUP BY c.channel_name;
+                       SELECT 
+    c.channel_name, 
+    AVG(
+        TIME_TO_SEC(
+            CASE
+                WHEN LOCATE('H', v.duration) > 0 THEN
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(v.duration, 'H', 1), 'T', -1) * 3600 +
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(v.duration, 'M', 1), 'H', -1) * 60 +
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(v.duration, 'S', 1), 'M', -1)
+                WHEN LOCATE('M', v.duration) > 0 THEN
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(v.duration, 'M', 1), 'T', -1) * 60 +
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(v.duration, 'S', 1), 'M', -1)
+                ELSE
+                    SUBSTRING_INDEX(SUBSTRING_INDEX(v.duration, 'S', 1), 'T', -1)
+            END
+        )
+    ) AS avg_duration_seconds
+FROM 
+    channel c
+JOIN 
+    video v ON c.channel_id = v.channel_id
+GROUP BY 
+    c.channel_name;
 
-                        EXPLAINATION: 
-                        This query selects the channel name from the channel table and calculates the average duration of all videos in
-                        each channel using the video table. The duration is converted to seconds using the TIME_TO_SEC function before
-                        calculating the average. The results are then grouped by channel name. 
-                        This will give you the average duration of all the videos in each channel along with their corresponding channel names.
+EXPLAINATION: 
+We're using LOCATE function to check if 'H' (hours) or 'M' (minutes) are present in the duration string.
+Based on their presence, we extract the corresponding hour, minute, and second parts and convert them into seconds.
+The CASE statement handles different scenarios depending on whether hours, minutes, or only seconds are present in the duration string.
+Finally, the average duration in seconds is calculated for each channel.
+This query should give you the average duration of videos in seconds for each channel, considering the provided datatype  format fo and datafetched for duration is varchar(255). 
 
 
                         10.Which videos have the highest number of comments and what are their
